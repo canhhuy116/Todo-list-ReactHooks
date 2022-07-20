@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Input from './components/Input/Input';
-import TodoList from './components/TodoList/TodoList';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.scss';
+import Home from './components/Home/Home';
+import DetailTodo from './components/DetailTodo/DetailTodo';
 
 const TO_DO_LIST_STORAGE = 'TodoList';
 
@@ -21,7 +22,7 @@ const loadLocalStorage = () => {
   return ListJobStorage;
 };
 
-function App(): JSX.Element {
+function App() {
   const [todoList, setTodoList] = useState<Job[]>(loadLocalStorage);
 
   useEffect(() => {
@@ -36,18 +37,42 @@ function App(): JSX.Element {
   );
 
   const onClickDeleteButton = useCallback((job: Job) => {
-    setTodoList((prevState) => {
-      return prevState.filter((todo) => {
-        return job.id !== todo.id;
-      });
-    });
+    setTodoList((prevState) => prevState.filter((todo) => todo.id !== job.id));
+  }, []);
+
+  const handleUpdateJob = useCallback((job: Job) => {
+    setTodoList((prevState) =>
+      prevState.map((todo) => (todo.id === job.id ? (todo = job) : todo))
+    );
   }, []);
 
   return (
     <div className="App">
-      <h2>To do List</h2>
-      <Input onClickAddButton={onClickAddButton} />
-      <TodoList todoList={todoList} onClickDeleteButton={onClickDeleteButton} />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                ListJob={todoList}
+                onClickAddButton={onClickAddButton}
+                onClickDeleteButton={onClickDeleteButton}
+              />
+            }
+          />
+          {todoList.map((todo) => {
+            return (
+              <Route
+                key={todo.id}
+                path={`/${todo.id}`}
+                element={
+                  <DetailTodo job={todo} handleUpdateJob={handleUpdateJob} />
+                }
+              />
+            );
+          })}
+        </Routes>
+      </Router>
     </div>
   );
 }

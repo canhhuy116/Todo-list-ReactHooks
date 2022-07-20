@@ -33,5 +33,17 @@
       background-color: #ff0100;
       margin-right: 5px;
     }
+
+    .linkDetail {
+      text-decoration: none;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .DetailBtn {
+      background-color: #ffff00;
+      margin: 0 5px;
+    }
   }
 }
