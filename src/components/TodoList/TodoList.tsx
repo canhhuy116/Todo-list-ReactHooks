@@ -5,18 +5,23 @@ import './styleTodoList.scss';
 interface Job {
   id: string;
   name: string;
+  description: string;
 }
 
 interface propsTodoList {
   todoList: Job[];
-  onClickDelBtn: object;
+  onClickDeleteButton: (job: Job) => void;
 }
 
-function TodoList({ todoList, onClickDelBtn }: propsTodoList) {
+function TodoList({ todoList, onClickDeleteButton }: propsTodoList) {
   return (
     <div className="TodoList">
       {todoList.map((todo) => (
-        <Todo key={todo.id} job={todo} onClickDelBtn={onClickDelBtn} />
+        <Todo
+          key={todo.id}
+          job={todo}
+          onClickDeleteButton={onClickDeleteButton}
+        />
       ))}
     </div>
   );

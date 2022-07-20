@@ -2,42 +2,40 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Input from './components/Input/Input';
 import TodoList from './components/TodoList/TodoList';
 import './App.scss';
-import { v4 } from 'uuid';
 
 const TO_DO_LIST_STORAGE = 'TodoList';
 
 interface Job {
   id: string;
   name: string;
+  description: string;
 }
 
+const loadLocalStorage = () => {
+  const DataStorage = localStorage.getItem(TO_DO_LIST_STORAGE);
+  let ListJobStorage: Job[];
+  ListJobStorage = [];
+  if (DataStorage) {
+    ListJobStorage = JSON.parse(DataStorage);
+  }
+  return ListJobStorage;
+};
+
 function App(): JSX.Element {
-  let a: string | null;
-  a = null;
-
-  const [todoList, setTodoList] = useState<Job[]>([]);
+  const [todoList, setTodoList] = useState<Job[]>(loadLocalStorage);
 
   useEffect(() => {
-    const ListStorage = localStorage.getItem(TO_DO_LIST_STORAGE);
-    if (ListStorage) {
-      console.log(JSON.parse(ListStorage));
-      setTodoList(JSON.parse(ListStorage));
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('123');
     localStorage.setItem(TO_DO_LIST_STORAGE, JSON.stringify(todoList));
   }, [todoList]);
 
-  const onListChangeCB = useCallback(
-    (name: string) => {
-      setTodoList([...todoList, { id: v4(), name }]);
+  const onClickAddButton = useCallback(
+    (job: Job) => {
+      setTodoList([...todoList, job]);
     },
     [todoList]
   );
 
-  const onClickDelBtn = useCallback((job: Job) => {
+  const onClickDeleteButton = useCallback((job: Job) => {
     setTodoList((prevState) => {
       return prevState.filter((todo) => {
         return job.id !== todo.id;
@@ -47,10 +45,9 @@ function App(): JSX.Element {
 
   return (
     <div className="App">
-      <h1>{a}</h1>
       <h2>To do List</h2>
-      <Input onListChange={onListChangeCB} />
-      <TodoList todoList={todoList} onClickDelBtn={onClickDelBtn} />
+      <Input onClickAddButton={onClickAddButton} />
+      <TodoList todoList={todoList} onClickDeleteButton={onClickDeleteButton} />
     </div>
   );
 }

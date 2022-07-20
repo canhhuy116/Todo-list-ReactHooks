@@ -5,33 +5,30 @@ import './styleTodo.scss';
 interface Job {
   id: string;
   name: string;
+  description: string;
 }
 
 interface propsTodo {
   job: Job;
-  onClickDelBtn: any;
+  onClickDeleteButton: (job: Job) => void;
 }
 
-function Todo({ job, onClickDelBtn }: propsTodo) {
+function Todo({ job, onClickDeleteButton }: propsTodo) {
   const handleClick = () => {
-    onClickDelBtn(job);
+    onClickDeleteButton(job);
   };
   return (
     <div className="Item">
       <div className="todo">
         <span>{job.name}</span>
       </div>
-      <div className="Btns">
-        <div className="DelBtn" onClick={handleClick}>
-          <div className="Btn">
-            <Button nameBtn="Delete" />
-          </div>
-        </div>
-        <div className="EditBtn">
-          <div className="Btn">
-            <Button nameBtn="Edit" />
-          </div>
-        </div>
+      <div className="Buttons">
+        <Button
+          nameBtn="Delete"
+          className="DeleteButton"
+          isDisableButton={false}
+          onClickButton={handleClick}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 .Item {
+  $height: 50px;
   width: 500px;
-  height: 50px;
+  height: $height;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,8 +10,8 @@
 
   .todo {
     flex: 1;
-    height: 80%;
-    margin: 10px 5px;
+    height: calc(0.8 * $height);
+    margin: 10px 5px 10px 0;
     border-radius: 3px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -22,29 +23,15 @@
     }
   }
 
-  .Btns {
-    height: 100%;
-    width: 30%;
+  .Buttons {
+    height: calc(0.8 * $height);
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-}
 
-.DelBtn {
-  height: 80%;
-  margin-right: 5px;
-  flex: 1;
-  .Btn {
-    background-color: red;
-  }
-}
-
-.EditBtn {
-  height: 80%;
-  margin: 0 5px;
-  flex: 1;
-  .Btn {
-    background-color: rgb(241, 241, 15);
+    .DeleteButton {
+      background-color: #ff0100;
+      margin-right: 5px;
+    }
   }
 }
