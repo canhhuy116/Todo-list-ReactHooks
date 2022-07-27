@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Button from '../Button/Button';
 import './styleInput.scss';
 import { v4 } from 'uuid';
@@ -15,6 +15,13 @@ interface propsInput {
 
 function Input({ onClickAddButton }: propsInput) {
   const [textInput, setJob] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useLayoutEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  });
 
   const handleClickAddButton = () => {
     setJob('');
@@ -25,6 +32,7 @@ function Input({ onClickAddButton }: propsInput) {
   return (
     <div className="inputTodoList">
       <input
+        ref={inputRef}
         type="text"
         className="inputBox"
         placeholder="Enter to do..."
