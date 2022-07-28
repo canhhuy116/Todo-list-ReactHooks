@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import Home from './components/Home/Home';
 import DetailTodo from './components/DetailTodo/DetailTodo';
-
-const TO_DO_LIST_STORAGE = 'TodoList';
+import { createTodo, deleteTodo, readTodo, updateTodo } from './api';
 
 interface Job {
   id: string;
@@ -12,38 +11,65 @@ interface Job {
   description: string;
 }
 
-const loadLocalStorage = () => {
-  const DataStorage = localStorage.getItem(TO_DO_LIST_STORAGE);
-  let ListJobStorage: Job[];
-  ListJobStorage = [];
-  if (DataStorage) {
-    ListJobStorage = JSON.parse(DataStorage);
-  }
-  return ListJobStorage;
-};
-
 function App() {
-  const [todoList, setTodoList] = useState<Job[]>(loadLocalStorage);
+  const [todoList, setTodoList] = useState<Job[]>([]);
 
   useEffect(() => {
-    localStorage.setItem(TO_DO_LIST_STORAGE, JSON.stringify(todoList));
-  }, [todoList]);
+    try {
+      readTodo()
+        .then((res) => res.json())
+        .then((res) => {
+          setTodoList(res);
+        });
+    } catch (error) {
+      alert(error);
+    }
+  }, []);
 
   const onClickAddButton = useCallback(
     (job: Job) => {
-      setTodoList([...todoList, job]);
+      try {
+        createTodo(job)
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+            setTodoList([...todoList, job]);
+          });
+      } catch (error) {
+        alert(error);
+      }
     },
     [todoList]
   );
 
   const onClickDeleteButton = useCallback((job: Job) => {
-    setTodoList((prevState) => prevState.filter((todo) => todo.id !== job.id));
+    try {
+      deleteTodo(job.id)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          setTodoList((prevState) =>
+            prevState.filter((todo) => todo.id !== job.id)
+          );
+        });
+    } catch (error) {
+      alert(error);
+    }
   }, []);
 
   const handleUpdateJob = useCallback((job: Job) => {
-    setTodoList((prevState) =>
-      prevState.map((todo) => (todo.id === job.id ? (todo = job) : todo))
-    );
+    try {
+      updateTodo(job)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          setTodoList((prevState) =>
+            prevState.map((todo) => (todo.id === job.id ? (todo = job) : todo))
+          );
+        });
+    } catch (error) {
+      alert(error);
+    }
   }, []);
 
   return (
