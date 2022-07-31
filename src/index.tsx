@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { StatusJobContext } from './components/StatusJobContext/StatusJobContext';
+import { AuthContext } from './components/AuthContext/AuthContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <StatusJobContext>
+    <AuthContext>
       <App />
-    </StatusJobContext>
+    </AuthContext>
   </React.StrictMode>
 );
 
