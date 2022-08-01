@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth';
 
 function Register() {
@@ -10,6 +11,7 @@ function Register() {
   });
 
   const { name, username, password, password2 } = formData;
+  const navigate = useNavigate();
 
   const onChange = (e: { target: { name: any; value: any } }) => {
     setFormData((prevState) => ({
@@ -25,6 +27,7 @@ function Register() {
       alert('Passwords do not match');
     } else {
       const userData = {
+        name,
         username,
         password,
       };
@@ -33,6 +36,7 @@ function Register() {
         register(userData).then((res) => {
           if (res.data) {
             localStorage.setItem('user', JSON.stringify(res.data));
+            navigate('/login');
           }
         });
       } catch (error) {
