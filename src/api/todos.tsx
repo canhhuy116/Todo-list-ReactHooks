@@ -6,7 +6,8 @@ interface Job {
 
 const URL = 'http://localhost:5000/todos';
 
-export const createTodo = (payload: Job) => {
+export const createTodo = (job: Job, username: string) => {
+  const payload = { job, username };
   return fetch(`${URL}`, {
     method: 'POST',
     mode: 'cors',
@@ -17,6 +18,10 @@ export const createTodo = (payload: Job) => {
 
 export const readTodo = () => {
   return fetch(`${URL}`);
+};
+
+export const readTodoByUsername = (username: string) => {
+  return fetch(`${URL}/${username}`);
 };
 
 export const updateTodo = (payload: Job) => {

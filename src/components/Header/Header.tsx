@@ -11,7 +11,7 @@ function Header() {
     localStorage.removeItem('user');
     logout().then((res) => {
       if (res.message) {
-        contextUser.changeStateUser(false);
+        contextUser.changeStateUser(false, '');
         navigate('/');
       }
     });

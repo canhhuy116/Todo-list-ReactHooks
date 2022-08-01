@@ -1,9 +1,14 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import './Dashboard.scss';
 import Home from '../Home/Home';
 import DetailTodo from '../DetailTodo/DetailTodo';
-import { createTodo, deleteTodo, readTodo, updateTodo } from '../../api/todos';
+import {
+  createTodo,
+  deleteTodo,
+  readTodoByUsername,
+  updateTodo,
+} from '../../api/todos';
 import { userContext } from '../AuthContext/AuthContext';
 
 interface Job {
@@ -25,7 +30,11 @@ function Dashboard() {
 
   useEffect(() => {
     try {
-      readTodo()
+      const username = contextUser.username;
+      if (!username) {
+        navigate('/login');
+      }
+      readTodoByUsername(username)
         .then((res) => res.json())
         .then((res) => {
           setTodoList(res);
@@ -33,12 +42,12 @@ function Dashboard() {
     } catch (error) {
       alert(error);
     }
-  }, []);
+  }, [contextUser.username, navigate]);
 
   const onClickAddButton = useCallback(
     (job: Job) => {
       try {
-        createTodo(job)
+        createTodo(job, contextUser.username)
           .then((res) => res.json())
           .then((res) => {
             console.log(res);
@@ -48,7 +57,7 @@ function Dashboard() {
         alert(error);
       }
     },
-    [todoList]
+    [contextUser.username, todoList]
   );
 
   const onClickDeleteButton = useCallback((job: Job) => {
@@ -83,6 +92,7 @@ function Dashboard() {
 
   return (
     <div className="Dashboard">
+      <Outlet />
       <Routes>
         <Route
           path="/"

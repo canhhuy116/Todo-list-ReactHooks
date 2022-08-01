@@ -6,16 +6,20 @@ interface propsAuth {
 
 const userContext = createContext({
   isUser: false,
-  changeStateUser: (checkUser: boolean) => {},
+  username: '',
+  changeStateUser: (checkUser: boolean, user: string) => {},
 });
 
 function AuthContext({ children }: propsAuth) {
   const [isUser, setIsUser] = useState(false);
-  const changeStateUser = (checkUser: boolean) => {
+  const [username, setUsername] = useState('');
+
+  const changeStateUser = (checkUser: boolean, user: string) => {
     setIsUser(checkUser);
+    setUsername(user);
   };
   return (
-    <userContext.Provider value={{ isUser, changeStateUser }}>
+    <userContext.Provider value={{ isUser, username, changeStateUser }}>
       {children}
     </userContext.Provider>
   );

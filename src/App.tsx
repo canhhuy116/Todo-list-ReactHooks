@@ -14,7 +14,7 @@ function App() {
           <Header />
           <Routes>
             <Route
-              path="/"
+              path="*"
               element={
                 <StatusJobContext>
                   <Dashboard />

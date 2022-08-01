@@ -2,6 +2,7 @@ import { useCallback, useContext, useState } from 'react';
 import InputForm from '../InputForm/InputForm';
 import './styleDetailTodo.scss';
 import { statusContext } from '../StatusJobContext/StatusJobContext';
+import { Link } from 'react-router-dom';
 
 interface Job {
   id: string;
@@ -73,6 +74,9 @@ function DetailTodo({ job, handleUpdateJob }: propsDetailTodo) {
         ))}
       </select>
       <input type="submit" className="submitBox" />
+      <Link to="/" className="linkHome">
+        <button>Home page</button>
+      </Link>
     </form>
   );
 }

@@ -40,8 +40,8 @@ function Login() {
           localStorage.setItem('user', JSON.stringify(res.data));
         }
         res.cookie.isAuth
-          ? contextUser.changeStateUser(true)
-          : contextUser.changeStateUser(false);
+          ? contextUser.changeStateUser(true, res.data.username)
+          : contextUser.changeStateUser(false, '');
       });
     } catch (error) {
       alert(error);
