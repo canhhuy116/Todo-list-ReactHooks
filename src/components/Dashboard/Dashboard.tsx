@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './Dashboard.scss';
 import Home from '../Home/Home';
 import DetailTodo from '../DetailTodo/DetailTodo';
 import { createTodo, deleteTodo, readTodo, updateTodo } from '../../api/todos';
+import { userContext } from '../AuthContext/AuthContext';
 
 interface Job {
   id: string;
@@ -13,6 +14,14 @@ interface Job {
 
 function Dashboard() {
   const [todoList, setTodoList] = useState<Job[]>([]);
+  const contextUser = useContext(userContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!contextUser.isUser) {
+      navigate('/login');
+    }
+  }, [contextUser.isUser, navigate]);
 
   useEffect(() => {
     try {

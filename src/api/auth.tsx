@@ -5,20 +5,36 @@ interface UserData {
 
 const URL = 'http://localhost:5000/users';
 
-export const login = (payload: UserData) => {
-  return fetch(`${URL}/login`, {
+export const login = async (payload: UserData) => {
+  const res = await fetch(`${URL}/login`, {
+    credentials: 'include',
     method: 'POST',
     mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+  return await res.json();
 };
 
-export const register = (payload: UserData) => {
-  return fetch(`${URL}/register`, {
+export const register = async (payload: UserData) => {
+  const res = await fetch(`${URL}/register`, {
+    credentials: 'same-origin',
     method: 'POST',
     mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+
+  return await res.json();
+};
+
+export const logout = async () => {
+  const res = await fetch(`${URL}/logout`, {
+    credentials: 'include',
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: localStorage.getItem('user'),
+  });
+  return await res.json();
 };

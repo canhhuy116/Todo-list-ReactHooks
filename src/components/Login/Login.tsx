@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { login } from '../../api/auth';
+import { userContext } from '../AuthContext/AuthContext';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,14 @@ function Login() {
   });
 
   const { username, password } = formData;
+  const contextUser = useContext(userContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (contextUser.isUser) {
+      navigate('/');
+    }
+  }, [contextUser, navigate]);
 
   const onChange = (e: { target: { name: string; value: string } }) => {
     setFormData((prevState) => ({
@@ -26,7 +35,14 @@ function Login() {
     };
 
     try {
-      login(userData).then((res) => res.json());
+      login(userData).then((res) => {
+        if (res.data) {
+          localStorage.setItem('user', JSON.stringify(res.data));
+        }
+        res.cookie.isAuth
+          ? contextUser.changeStateUser(true)
+          : contextUser.changeStateUser(false);
+      });
     } catch (error) {
       alert(error);
     }
@@ -42,10 +58,10 @@ function Login() {
         <form onSubmit={onSubmit}>
           <div className="form-group">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="email"
-              name="email"
+              name="username"
               value={username}
               placeholder="Enter your username"
               onChange={onChange}

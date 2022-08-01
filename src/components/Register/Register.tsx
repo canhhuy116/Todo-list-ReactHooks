@@ -30,7 +30,11 @@ function Register() {
       };
 
       try {
-        register(userData).then((res) => res.json());
+        register(userData).then((res) => {
+          if (res.data) {
+            localStorage.setItem('user', JSON.stringify(res.data));
+          }
+        });
       } catch (error) {
         alert(error);
       }
@@ -58,12 +62,12 @@ function Register() {
           </div>
           <div className="form-group">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="email"
-              name="email"
+              name="username"
               value={username}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               onChange={onChange}
             />
           </div>
