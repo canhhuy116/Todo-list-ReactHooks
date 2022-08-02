@@ -25,7 +25,7 @@ function Header() {
         <Link to="/">Todo List</Link>
       </div>
       <ul>
-        {contextUser.isUser ? (
+        {contextUser.username ? (
           <li>
             <button className="btn" onClick={onLogout}>
               Logout

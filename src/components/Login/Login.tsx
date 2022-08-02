@@ -14,7 +14,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (contextUser.isUser) {
+    if (contextUser.username) {
       navigate('/');
     }
   }, [contextUser, navigate]);
@@ -46,6 +46,10 @@ function Login() {
     } catch (error) {
       alert(error);
     }
+  };
+
+  const handleClickBtnFB = () => {
+    window.open('http://localhost:5000/auth/google', '_self');
   };
 
   return (
@@ -85,6 +89,19 @@ function Login() {
             </button>
           </div>
         </form>
+      </section>
+
+      <section>
+        <div className=" form form-group">
+          <p>OR</p>
+          <button
+            onClick={handleClickBtnFB}
+            type="button"
+            className="btn btn-block btn-gg"
+          >
+            Google
+          </button>
+        </div>
       </section>
 
       <section className="register">

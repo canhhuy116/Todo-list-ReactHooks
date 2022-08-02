@@ -20,8 +20,8 @@ export const readTodo = () => {
   return fetch(`${URL}`);
 };
 
-export const readTodoByUsername = (username: string) => {
-  return fetch(`${URL}/${username}`);
+export const readTodoByUsername = () => {
+  return fetch(`${URL}`, { credentials: 'include' });
 };
 
 export const updateTodo = (payload: Job) => {

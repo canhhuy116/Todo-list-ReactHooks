@@ -23,18 +23,12 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!contextUser.isUser) {
-      navigate('/login');
-    }
-  }, [contextUser.isUser, navigate]);
-
-  useEffect(() => {
     try {
       const username = contextUser.username;
       if (!username) {
         navigate('/login');
       }
-      readTodoByUsername(username)
+      readTodoByUsername()
         .then((res) => res.json())
         .then((res) => {
           setTodoList(res);

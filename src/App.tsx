@@ -13,6 +13,8 @@ function App() {
         <div className="container">
           <Header />
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="*"
               element={
@@ -21,8 +23,6 @@ function App() {
                 </StatusJobContext>
               }
             />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
           </Routes>
         </div>
       </Router>
