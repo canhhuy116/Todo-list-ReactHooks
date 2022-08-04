@@ -1,23 +1,15 @@
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../../api/auth';
+import { Link } from 'react-router-dom';
 import { userContext } from '../AuthContext/AuthContext';
 import './Header.scss';
 
 function Header() {
-  const navigate = useNavigate();
+  const contextUser = useContext(userContext);
 
   const onLogout = () => {
     localStorage.removeItem('user');
-    logout().then((res) => {
-      if (res.message) {
-        contextUser.changeStateUser(false, '');
-        navigate('/');
-      }
-    });
+    contextUser.changeStateUser('');
   };
-
-  const contextUser = useContext(userContext);
 
   return (
     <header className="header">

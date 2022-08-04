@@ -28,11 +28,9 @@ function Dashboard() {
       if (!username) {
         navigate('/login');
       }
-      readTodoByUsername()
-        .then((res) => res.json())
-        .then((res) => {
-          setTodoList(res);
-        });
+      readTodoByUsername().then((res) => {
+        setTodoList(res);
+      });
     } catch (error) {
       alert(error);
     }
@@ -41,29 +39,21 @@ function Dashboard() {
   const onClickAddButton = useCallback(
     (job: Job) => {
       try {
-        createTodo(job, contextUser.username)
-          .then((res) => res.json())
-          .then((res) => {
-            console.log(res);
-            setTodoList([...todoList, job]);
-          });
+        createTodo(job).then((res) => {
+          setTodoList([...todoList, res]);
+        });
       } catch (error) {
         alert(error);
       }
     },
-    [contextUser.username, todoList]
+    [todoList]
   );
 
   const onClickDeleteButton = useCallback((job: Job) => {
     try {
-      deleteTodo(job.id)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-          setTodoList((prevState) =>
-            prevState.filter((todo) => todo.id !== job.id)
-          );
-        });
+      deleteTodo(job.id).then((res) => {
+        setTodoList((prevState) => prevState.filter((todo) => todo.id !== res));
+      });
     } catch (error) {
       alert(error);
     }
@@ -71,14 +61,11 @@ function Dashboard() {
 
   const handleUpdateJob = useCallback((job: Job) => {
     try {
-      updateTodo(job)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-          setTodoList((prevState) =>
-            prevState.map((todo) => (todo.id === job.id ? (todo = job) : todo))
-          );
-        });
+      updateTodo(job).then((res) => {
+        setTodoList((prevState) =>
+          prevState.map((todo) => (todo.id === job.id ? (todo = res) : todo))
+        );
+      });
     } catch (error) {
       alert(error);
     }

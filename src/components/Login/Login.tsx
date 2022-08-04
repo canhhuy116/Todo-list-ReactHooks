@@ -36,19 +36,17 @@ function Login() {
 
     try {
       login(userData).then((res) => {
-        if (res.data) {
-          localStorage.setItem('user', JSON.stringify(res.data));
+        if (res) {
+          localStorage.setItem('user', JSON.stringify(res));
+          contextUser.changeStateUser(res.username);
         }
-        res.cookie.isAuth
-          ? contextUser.changeStateUser(true, res.data.username)
-          : contextUser.changeStateUser(false, '');
       });
     } catch (error) {
       alert(error);
     }
   };
 
-  const handleClickBtnFB = () => {
+  const handleClickBtnGG = () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
 
@@ -95,7 +93,7 @@ function Login() {
         <div className=" form form-group">
           <p>OR</p>
           <button
-            onClick={handleClickBtnFB}
+            onClick={handleClickBtnGG}
             type="button"
             className="btn btn-block btn-gg"
           >

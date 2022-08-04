@@ -27,14 +27,3 @@ export const register = async (payload: UserData) => {
 
   return await res.json();
 };
-
-export const logout = async () => {
-  const res = await fetch(`${URL}/logout`, {
-    credentials: 'include',
-    method: 'POST',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: localStorage.getItem('user'),
-  });
-  return await res.json();
-};

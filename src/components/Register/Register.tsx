@@ -34,8 +34,8 @@ function Register() {
 
       try {
         register(userData).then((res) => {
-          if (res.data) {
-            localStorage.setItem('user', JSON.stringify(res.data));
+          if (res) {
+            localStorage.setItem('user', JSON.stringify(res));
             navigate('/login');
           }
         });
