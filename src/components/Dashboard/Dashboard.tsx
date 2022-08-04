@@ -21,20 +21,19 @@ function Dashboard() {
   const [todoList, setTodoList] = useState<Job[]>([]);
   const contextUser = useContext(userContext);
   const navigate = useNavigate();
+  const username = contextUser.username;
 
   useEffect(() => {
-    try {
-      const username = contextUser.username;
-      if (!username) {
-        navigate('/login');
-      }
-      readTodoByUsername().then((res) => {
-        setTodoList(res);
-      });
-    } catch (error) {
-      alert(error);
+    if (!username) {
+      navigate('/login');
     }
-  }, [contextUser.username, navigate]);
+  }, [navigate, username]);
+
+  useEffect(() => {
+    readTodoByUsername().then((res) => {
+      setTodoList(res);
+    });
+  }, []);
 
   const onClickAddButton = useCallback(
     (job: Job) => {

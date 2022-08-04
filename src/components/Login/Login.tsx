@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import { login } from '../../api/auth';
 import { userContext } from '../AuthContext/AuthContext';
 
@@ -11,40 +11,47 @@ function Login() {
 
   const { username, password } = formData;
   const contextUser = useContext(userContext);
-  const navigate = useNavigate();
+  const user = contextUser.username;
 
   useEffect(() => {
-    if (contextUser.username) {
-      navigate('/');
+    console.log('111');
+    if (user) {
+      <Navigate to="/" replace={true} />;
     }
-  }, [contextUser, navigate]);
+  }, [user]);
 
-  const onChange = (e: { target: { name: string; value: string } }) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const onChange = useCallback(
+    (e: { target: { name: string; value: string } }) => {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    []
+  );
 
-  const onSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const onSubmit = useCallback(
+    (e: { preventDefault: () => void }) => {
+      e.preventDefault();
 
-    const userData = {
-      username,
-      password,
-    };
+      const userData = {
+        username,
+        password,
+      };
 
-    try {
-      login(userData).then((res) => {
-        if (res) {
-          localStorage.setItem('user', JSON.stringify(res));
-          contextUser.changeStateUser(res.username);
-        }
-      });
-    } catch (error) {
-      alert(error);
-    }
-  };
+      try {
+        login(userData).then((res) => {
+          if (res) {
+            localStorage.setItem('user', JSON.stringify(res));
+            contextUser.changeStateUser(res.username);
+          }
+        });
+      } catch (error) {
+        alert(error);
+      }
+    },
+    [contextUser, password, username]
+  );
 
   const handleClickBtnGG = () => {
     window.open('http://localhost:5000/auth/google', '_self');
@@ -112,4 +119,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default memo(Login);

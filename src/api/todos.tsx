@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 interface Job {
   id: string;
   name: string;
@@ -6,13 +7,12 @@ interface Job {
 
 const URL = 'http://localhost:5000/todos';
 
-const store = localStorage.getItem('user');
-let token: '';
-if (store) {
-  token = JSON.parse(store).token;
-}
-
 export const createTodo = async (payload: Job) => {
+  const store = localStorage.getItem('user');
+  let token = '';
+  if (store) {
+    token = JSON.parse(store).token;
+  }
   const res = await fetch(`${URL}`, {
     method: 'POST',
     mode: 'cors',
@@ -26,6 +26,11 @@ export const createTodo = async (payload: Job) => {
 };
 
 export const readTodoByUsername = async () => {
+  const store = localStorage.getItem('user');
+  let token = '';
+  if (store) {
+    token = JSON.parse(store).token;
+  }
   const res = await fetch(`${URL}`, {
     credentials: 'include',
     headers: {
@@ -33,10 +38,19 @@ export const readTodoByUsername = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
+  if (res.status === 401) {
+    <Navigate to="/login" replace={true} />;
+    return [];
+  }
   return await res.json();
 };
 
 export const updateTodo = async (payload: Job) => {
+  const store = localStorage.getItem('user');
+  let token = '';
+  if (store) {
+    token = JSON.parse(store).token;
+  }
   const res = await fetch(`${URL}/${payload.id}`, {
     credentials: 'include',
     method: 'PUT',
@@ -51,6 +65,11 @@ export const updateTodo = async (payload: Job) => {
 };
 
 export const deleteTodo = async (idTodo: string) => {
+  const store = localStorage.getItem('user');
+  let token = '';
+  if (store) {
+    token = JSON.parse(store).token;
+  }
   const res = await fetch(`${URL}/${idTodo}`, {
     credentials: 'include',
     method: 'DELETE',
