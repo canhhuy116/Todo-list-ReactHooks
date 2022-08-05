@@ -5,6 +5,7 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import './App.scss';
 import Header from './components/Header/Header';
+import RequireAuth from './components/AuthContext/RequireAuth';
 
 function App() {
   return (
@@ -16,10 +17,12 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route
-              path="/"
+              path="*"
               element={
                 <StatusJobContext>
-                  <Dashboard />
+                  <RequireAuth>
+                    <Dashboard />
+                  </RequireAuth>
                 </StatusJobContext>
               }
             />

@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router-dom';
 interface Job {
   id: string;
   name: string;
@@ -13,16 +12,17 @@ export const createTodo = async (payload: Job) => {
   if (store) {
     token = JSON.parse(store).token;
   }
-  const res = await fetch(`${URL}`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  return await res.json();
+  return (
+    await fetch(`${URL}`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
+  ).json();
 };
 
 export const readTodoByUsername = async () => {
@@ -31,6 +31,7 @@ export const readTodoByUsername = async () => {
   if (store) {
     token = JSON.parse(store).token;
   }
+
   const res = await fetch(`${URL}`, {
     credentials: 'include',
     headers: {
@@ -39,10 +40,10 @@ export const readTodoByUsername = async () => {
     },
   });
   if (res.status === 401) {
-    <Navigate to="/login" replace={true} />;
+    window.location.replace(`${window.location.origin}/login`);
     return [];
   }
-  return await res.json();
+  return res.json();
 };
 
 export const updateTodo = async (payload: Job) => {
@@ -51,17 +52,18 @@ export const updateTodo = async (payload: Job) => {
   if (store) {
     token = JSON.parse(store).token;
   }
-  const res = await fetch(`${URL}/${payload.id}`, {
-    credentials: 'include',
-    method: 'PUT',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  return await res.json();
+  return (
+    await fetch(`${URL}/${payload.id}`, {
+      credentials: 'include',
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
+  ).json();
 };
 
 export const deleteTodo = async (idTodo: string) => {
@@ -70,14 +72,15 @@ export const deleteTodo = async (idTodo: string) => {
   if (store) {
     token = JSON.parse(store).token;
   }
-  const res = await fetch(`${URL}/${idTodo}`, {
-    credentials: 'include',
-    method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return await res.json();
+  return (
+    await fetch(`${URL}/${idTodo}`, {
+      credentials: 'include',
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  ).json();
 };

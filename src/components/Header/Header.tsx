@@ -8,7 +8,7 @@ function Header() {
 
   const onLogout = () => {
     localStorage.removeItem('user');
-    contextUser.changeStateUser('');
+    contextUser.logout();
   };
 
   return (

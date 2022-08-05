@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import './Dashboard.scss';
 import Home from '../Home/Home';
 import DetailTodo from '../DetailTodo/DetailTodo';
@@ -9,7 +9,6 @@ import {
   readTodoByUsername,
   updateTodo,
 } from '../../api/todos';
-import { userContext } from '../AuthContext/AuthContext';
 
 interface Job {
   id: string;
@@ -19,28 +18,29 @@ interface Job {
 
 function Dashboard() {
   const [todoList, setTodoList] = useState<Job[]>([]);
-  const contextUser = useContext(userContext);
-  const navigate = useNavigate();
-  const username = contextUser.username;
+  const shouldRead = useRef(true);
 
   useEffect(() => {
-    if (!username) {
-      navigate('/login');
+    const getData = async () => {
+      try {
+        readTodoByUsername().then((res) => {
+          setTodoList(res);
+        });
+      } catch (error) {
+        alert(error);
+      }
+    };
+    if (shouldRead.current) {
+      shouldRead.current = false;
+      getData();
     }
-  }, [navigate, username]);
-
-  useEffect(() => {
-    readTodoByUsername().then((res) => {
-      setTodoList(res);
-    });
   }, []);
 
   const onClickAddButton = useCallback(
-    (job: Job) => {
+    async (job: Job) => {
       try {
-        createTodo(job).then((res) => {
-          setTodoList([...todoList, res]);
-        });
+        const todos = await createTodo(job);
+        setTodoList([...todoList, todos]);
       } catch (error) {
         alert(error);
       }
@@ -48,23 +48,21 @@ function Dashboard() {
     [todoList]
   );
 
-  const onClickDeleteButton = useCallback((job: Job) => {
+  const onClickDeleteButton = useCallback(async (job: Job) => {
     try {
-      deleteTodo(job.id).then((res) => {
-        setTodoList((prevState) => prevState.filter((todo) => todo.id !== res));
-      });
+      const todos = await deleteTodo(job.id);
+      setTodoList((prevState) => prevState.filter((todo) => todo.id !== todos));
     } catch (error) {
       alert(error);
     }
   }, []);
 
-  const handleUpdateJob = useCallback((job: Job) => {
+  const handleUpdateJob = useCallback(async (job: Job) => {
     try {
-      updateTodo(job).then((res) => {
-        setTodoList((prevState) =>
-          prevState.map((todo) => (todo.id === job.id ? (todo = res) : todo))
-        );
-      });
+      const todos = await updateTodo(job);
+      setTodoList((prevState) =>
+        prevState.map((todo) => (todo.id === job.id ? (todo = todos) : todo))
+      );
     } catch (error) {
       alert(error);
     }

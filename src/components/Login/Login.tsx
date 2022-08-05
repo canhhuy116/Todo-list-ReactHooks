@@ -1,5 +1,5 @@
-import { Link, Navigate } from 'react-router-dom';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { memo, useCallback, useContext, useState } from 'react';
 import { login } from '../../api/auth';
 import { userContext } from '../AuthContext/AuthContext';
 
@@ -11,14 +11,7 @@ function Login() {
 
   const { username, password } = formData;
   const contextUser = useContext(userContext);
-  const user = contextUser.username;
-
-  useEffect(() => {
-    console.log('111');
-    if (user) {
-      <Navigate to="/" replace={true} />;
-    }
-  }, [user]);
+  const navigate = useNavigate();
 
   const onChange = useCallback(
     (e: { target: { name: string; value: string } }) => {
@@ -43,14 +36,16 @@ function Login() {
         login(userData).then((res) => {
           if (res) {
             localStorage.setItem('user', JSON.stringify(res));
-            contextUser.changeStateUser(res.username);
+            contextUser.login(res.username, () =>
+              navigate('/', { replace: true })
+            );
           }
         });
       } catch (error) {
         alert(error);
       }
     },
-    [contextUser, password, username]
+    [contextUser, navigate, password, username]
   );
 
   const handleClickBtnGG = () => {
