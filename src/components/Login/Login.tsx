@@ -34,11 +34,13 @@ function Login() {
 
       try {
         login(userData).then((res) => {
-          if (res) {
+          if (!res.stack) {
             localStorage.setItem('user', JSON.stringify(res));
             contextUser.login(res.username, () =>
               navigate('/', { replace: true })
             );
+          } else {
+            alert(res.message);
           }
         });
       } catch (error) {
@@ -48,7 +50,7 @@ function Login() {
     [contextUser, navigate, password, username]
   );
 
-  const handleClickBtnGG = () => {
+  const handleClickBtnGG = async () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
 

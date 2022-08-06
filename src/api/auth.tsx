@@ -28,3 +28,37 @@ export const register = async (payload: UserData) => {
     })
   ).json();
 };
+
+export const getMe = async () => {
+  const store = localStorage.getItem('user');
+  let token = '';
+  if (store) {
+    token = JSON.parse(store).token;
+  }
+  return (
+    await fetch(`${URL}/me`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  ).json();
+};
+
+export const refreshToken = async () => {
+  const store = localStorage.getItem('user');
+  let refToken = '';
+  if (store) {
+    refToken = JSON.parse(store).refreshToken;
+  }
+  const payload = { refreshtoken: refToken };
+  const res = await fetch(`${URL}/refreshToken`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return res.json();
+};

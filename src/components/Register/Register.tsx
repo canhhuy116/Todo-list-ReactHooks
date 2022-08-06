@@ -20,7 +20,7 @@ function Register() {
     }));
   };
 
-  const onSubmit = (e: { preventDefault: () => void }) => {
+  const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (password !== password2) {
@@ -33,12 +33,13 @@ function Register() {
       };
 
       try {
-        register(userData).then((res) => {
-          if (res) {
-            localStorage.setItem('user', JSON.stringify(res));
-            navigate('/login');
-          }
-        });
+        const registerRes = await register(userData);
+        if (!registerRes.stack) {
+          localStorage.setItem('user', JSON.stringify(registerRes));
+          navigate('/login');
+        } else {
+          alert(registerRes.message);
+        }
       } catch (error) {
         alert(error);
       }

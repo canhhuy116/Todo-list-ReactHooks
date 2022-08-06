@@ -9,6 +9,7 @@ import {
   readTodoByUsername,
   updateTodo,
 } from '../../api/todos';
+import { refreshToken } from '../../api/auth';
 
 interface Job {
   id: string;
@@ -23,9 +24,23 @@ function Dashboard() {
   useEffect(() => {
     const getData = async () => {
       try {
-        readTodoByUsername().then((res) => {
-          setTodoList(res);
-        });
+        const todos = await readTodoByUsername();
+        if (todos.code && todos.code === 401) {
+          if (todos.msg && todos.msg === 'jwt expired') {
+            const { token } = await refreshToken();
+            if (token) {
+              const store = localStorage.getItem('user');
+              if (store) {
+                const data = { ...JSON.parse(store), token };
+                localStorage.setItem('user', JSON.stringify(data));
+                const res = await readTodoByUsername();
+                setTodoList(res);
+              }
+            }
+          }
+        } else {
+          setTodoList(todos);
+        }
       } catch (error) {
         alert(error);
       }
@@ -40,7 +55,22 @@ function Dashboard() {
     async (job: Job) => {
       try {
         const todos = await createTodo(job);
-        setTodoList([...todoList, todos]);
+        if (todos.code && todos.code === 401) {
+          if (todos.msg && todos.msg === 'jwt expired') {
+            const { token } = await refreshToken();
+            if (token) {
+              const store = localStorage.getItem('user');
+              if (store) {
+                const data = { ...JSON.parse(store), token };
+                localStorage.setItem('user', JSON.stringify(data));
+                const res = await createTodo(job);
+                setTodoList([...todoList, res]);
+              }
+            }
+          }
+        } else {
+          setTodoList([...todoList, todos]);
+        }
       } catch (error) {
         alert(error);
       }
@@ -51,7 +81,26 @@ function Dashboard() {
   const onClickDeleteButton = useCallback(async (job: Job) => {
     try {
       const todos = await deleteTodo(job.id);
-      setTodoList((prevState) => prevState.filter((todo) => todo.id !== todos));
+      if (todos.code && todos.code === 401) {
+        if (todos.msg && todos.msg === 'jwt expired') {
+          const { token } = await refreshToken();
+          if (token) {
+            const store = localStorage.getItem('user');
+            if (store) {
+              const data = { ...JSON.parse(store), token };
+              localStorage.setItem('user', JSON.stringify(data));
+              const res = await deleteTodo(job.id);
+              setTodoList((prevState) =>
+                prevState.filter((todo) => todo.id !== res.id)
+              );
+            }
+          }
+        }
+      } else {
+        setTodoList((prevState) =>
+          prevState.filter((todo) => todo.id !== todos.id)
+        );
+      }
     } catch (error) {
       alert(error);
     }
@@ -60,9 +109,28 @@ function Dashboard() {
   const handleUpdateJob = useCallback(async (job: Job) => {
     try {
       const todos = await updateTodo(job);
-      setTodoList((prevState) =>
-        prevState.map((todo) => (todo.id === job.id ? (todo = todos) : todo))
-      );
+      if (todos.code && todos.code === 401) {
+        if (todos.msg && todos.msg === 'jwt expired') {
+          const { token } = await refreshToken();
+          if (token) {
+            const store = localStorage.getItem('user');
+            if (store) {
+              const data = { ...JSON.parse(store), token };
+              localStorage.setItem('user', JSON.stringify(data));
+              const res = await updateTodo(job);
+              setTodoList((prevState) =>
+                prevState.map((todo) =>
+                  todo.id === job.id ? (todo = res) : todo
+                )
+              );
+            }
+          }
+        }
+      } else {
+        setTodoList((prevState) =>
+          prevState.map((todo) => (todo.id === job.id ? (todo = todos) : todo))
+        );
+      }
     } catch (error) {
       alert(error);
     }

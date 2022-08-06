@@ -31,19 +31,15 @@ export const readTodoByUsername = async () => {
   if (store) {
     token = JSON.parse(store).token;
   }
-
-  const res = await fetch(`${URL}`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (res.status === 401) {
-    window.location.replace(`${window.location.origin}/login`);
-    return [];
-  }
-  return res.json();
+  return (
+    await fetch(`${URL}`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  ).json();
 };
 
 export const updateTodo = async (payload: Job) => {
